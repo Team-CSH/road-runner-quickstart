@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.teamcode.util.RobotConfiguration;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,10 +34,10 @@ public class EncoderTestButton extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        leftFront = hardwareMap.get(DcMotorEx.class, RobotConfiguration.FRONT_LEFT_WHEEL);
+        leftRear = hardwareMap.get(DcMotorEx.class, RobotConfiguration.REAR_LEFT_WHEEL);
+        rightRear = hardwareMap.get(DcMotorEx.class, RobotConfiguration.REAR_RIGHT_WHEEL);
+        rightFront = hardwareMap.get(DcMotorEx.class, RobotConfiguration.FRONT_RIGHT_WHEEL);
 
         //NU STIU DACA SUNT NECESARE
 //        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
