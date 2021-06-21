@@ -47,7 +47,7 @@ public class Encoder {
         this.motor = motor;
         this.clock = clock;
 
-        this.direction = Direction.FORWARD;
+        this.direction = Direction.REVERSE;
 
         this.lastPosition = 0;
         this.velocityEstimate = 0.0;
