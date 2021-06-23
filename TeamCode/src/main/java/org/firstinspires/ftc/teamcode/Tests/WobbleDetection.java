@@ -28,6 +28,7 @@ import java.util.List;
 public class WobbleDetection extends LinearOpMode {
 
     OpenCvCamera Webcam;
+    OpenCvCamera phoneCam;
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry dashboardTelemetry = dashboard.getTelemetry();
     // CONSTANTS
@@ -43,15 +44,15 @@ public class WobbleDetection extends LinearOpMode {
     {
         // Camera Init
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        Webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
-        Webcam.openCameraDevice();
+        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        phoneCam.openCameraDevice();
 
         // Loading pipeline
         RingPipeline visionPipeline = new RingPipeline();
-        Webcam.setPipeline(visionPipeline);
+        phoneCam.setPipeline(visionPipeline);
 
         // Start streaming the pipeline
-        Webcam.startStreaming(1280,720,OpenCvCameraRotation.UPRIGHT);
+        phoneCam.startStreaming(320,240,OpenCvCameraRotation.UPRIGHT);
 
         waitForStart();
 
@@ -67,10 +68,14 @@ public class WobbleDetection extends LinearOpMode {
     class RingPipeline extends OpenCvPipeline {
         private Scalar mLowerBound = new Scalar(X_LEFT, Y_UP);
         private Scalar mUpperBound = new Scalar(X_RIGHT, Y_DOWN);
+        private Scalar GREEN = new Scalar(0, 255, 0);
+
+        private Point mLowerBoundPoint = new Point(X_LEFT, Y_UP);
+        private Point mUpperBoundPoint = new Point(X_RIGHT, Y_DOWN);
+
         private double mMinContourArea = 0.1;
         private Scalar mColorRadius = new Scalar(25,50,50,0);
-        Scalar GRAY = new Scalar(220, 220, 220);
-        private Mat mSpectrum = new Mat();
+        private Scalar GRAY = new Scalar(220, 220, 220);
         private List<MatOfPoint> mContours = new ArrayList<MatOfPoint>();
         private int Wobble;
 
@@ -79,53 +84,64 @@ public class WobbleDetection extends LinearOpMode {
         Mat mMask = new Mat();
         Mat mDilatedMask = new Mat();
         Mat mHierarchy = new Mat();
+        Mat tholdMat = new Mat();
+        Mat Cb = new Mat();
 
 
         @Override
         public Mat processFrame(Mat input) {
             Imgproc.pyrDown(input, mPyrDownMat);
             Imgproc.pyrDown(mPyrDownMat, mPyrDownMat);
-
             Imgproc.cvtColor(mPyrDownMat, mHsvMat, Imgproc.COLOR_RGB2HSV_FULL);
 
             Core.inRange(mHsvMat, mLowerBound, mUpperBound, mMask);
             Imgproc.dilate(mMask, mDilatedMask, new Mat());
 
             List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
-
             Imgproc.findContours(mDilatedMask, contours, mHierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            Imgproc.threshold(Cb, tholdMat, 150, 255, Imgproc.THRESH_BINARY_INV);
 
-            // Find max contour area
-            double maxArea = 0;
-            Iterator<MatOfPoint> each = contours.iterator();
-            while (each.hasNext()) {
-                MatOfPoint wrapper = each.next();
-                double area = Imgproc.contourArea(wrapper);
-                if (area > maxArea)
-                    maxArea = area;
-            }
+            int BigSquarePointX = (int) ((mLowerBoundPoint.x + mLowerBoundPoint.y) / 2);
+            int BigSquarePointY = (int) ((mLowerBoundPoint.y + mLowerBoundPoint.y) / 2);
 
-            int BigSquarePointX = (int) ((X_LEFT + Y_UP) / 2);
-            int BigSquarePointY = (int) ((X_RIGHT + Y_DOWN) / 2);
+            double[] bigSquarePointValues = tholdMat.get(BigSquarePointY, BigSquarePointX);
+            Wobble = (int) bigSquarePointValues[0];
 
-            // Filter contours by area and resize to fit the original image size
-            mContours.clear();
-            each = contours.iterator();
-            while (each.hasNext()) {
-                MatOfPoint contour = each.next();
-                if (Imgproc.contourArea(contour) > mMinContourArea * maxArea) {
-                    Core.multiply(contour, new Scalar(4,4), contour);
-                    mContours.add(contour);
-                }
-            }
 
             Imgproc.rectangle(
                     input,
-                    mUpperBound,
-                    mLowerBound,
+                    mUpperBoundPoint,
+                    mLowerBoundPoint,
                     GRAY,
                     1
             );
+
+            Imgproc.circle(
+                    input,
+                    new Point(BigSquarePointX, BigSquarePointY),
+                    2,
+                    GRAY,
+                    1
+            );
+
+            if (Wobble == 0) {
+                Imgproc.rectangle(
+                        input,
+                        mUpperBoundPoint,
+                        mLowerBoundPoint,
+                        GREEN,
+                        1
+                );
+                Imgproc.circle(
+                        input,
+                        new Point(BigSquarePointX, BigSquarePointY),
+                        2,
+                        GREEN,
+                        1
+                );
+            }
+
+
             return input;
         }
     }
