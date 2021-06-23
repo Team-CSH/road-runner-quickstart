@@ -32,8 +32,8 @@ public class EncoderTest extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotorEx.class, RobotConfiguration.FRONT_RIGHT_WHEEL);
 
         //NU STIU DACA SUNT NECESARE
-//        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-//        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
+        leftRear.setDirection(DcMotorEx.Direction.REVERSE);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 

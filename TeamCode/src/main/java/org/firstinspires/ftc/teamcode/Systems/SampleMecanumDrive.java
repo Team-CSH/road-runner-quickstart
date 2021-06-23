@@ -30,22 +30,23 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.util.RobotConfiguration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.MAX_ANG_ACCEL;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.TRACK_WIDTH;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.Systems.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.MAX_ANG_ACCEL;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.MAX_ANG_VEL;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.TRACK_WIDTH;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.kA;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.TunningPIDs.DriveConstants.kV;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
@@ -98,12 +99,15 @@ public class SampleMecanumDrive extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        leftFront = hardwareMap.get(DcMotorEx.class, RobotConfiguration.FRONT_LEFT_WHEEL);
+        leftRear = hardwareMap.get(DcMotorEx.class, RobotConfiguration.REAR_LEFT_WHEEL);
+        rightRear = hardwareMap.get(DcMotorEx.class, RobotConfiguration.REAR_RIGHT_WHEEL);
+        rightFront = hardwareMap.get(DcMotorEx.class, RobotConfiguration.FRONT_RIGHT_WHEEL);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+
+        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
+        leftRear.setDirection(DcMotorEx.Direction.REVERSE);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
