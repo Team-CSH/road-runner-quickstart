@@ -69,7 +69,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    private DcMotorEx frontLeft, rearLeft, rearRight, frontRight;
     private List<DcMotorEx> motors;
 
     private BNO055IMU imu;
@@ -77,6 +77,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
+        RobotConfiguration.init(hardwareMap);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
@@ -99,15 +100,15 @@ public class SampleMecanumDrive extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, RobotConfiguration.FRONT_LEFT_WHEEL);
-        leftRear = hardwareMap.get(DcMotorEx.class, RobotConfiguration.REAR_LEFT_WHEEL);
-        rightRear = hardwareMap.get(DcMotorEx.class, RobotConfiguration.REAR_RIGHT_WHEEL);
-        rightFront = hardwareMap.get(DcMotorEx.class, RobotConfiguration.FRONT_RIGHT_WHEEL);
+        frontLeft = RobotConfiguration.getFLM();
+        rearLeft = RobotConfiguration.getRLM();
+        rearRight = RobotConfiguration.getRRM();
+        frontRight = RobotConfiguration.getFRM();
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        motors = Arrays.asList(frontLeft, rearLeft, rearRight, frontRight);
 
-        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
-        leftRear.setDirection(DcMotorEx.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        rearLeft.setDirection(DcMotorEx.Direction.REVERSE);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -271,10 +272,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        frontLeft.setPower(v);
+        rearLeft.setPower(v1);
+        rearRight.setPower(v2);
+        frontRight.setPower(v3);
     }
 
     @Override
