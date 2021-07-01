@@ -26,13 +26,11 @@ public class RingDetection extends LinearOpMode {
     final int Y_MIDDLE = 165;
     final int Y_DOWN = 172;
 
-
-
     @Override
     public void runOpMode()
     {
         // Camera Init
-        RobotConfiguration.init(hardwareMap, RobotConfiguration.Init.PHONE_CAMERA);
+        RobotConfiguration.init(hardwareMap, RobotConfiguration.Init.PHONE_CAM);
         phoneCam = RobotConfiguration.getCamera();
 
         // Loading pipeline

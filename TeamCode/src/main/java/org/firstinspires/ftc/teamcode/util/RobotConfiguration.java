@@ -20,6 +20,7 @@ public class RobotConfiguration {
     public static final Resolution RESOLUTION = Resolution.R960x720;
     public static final int HEIGHT_OFFSET = 100;
     public static final int HEIGHT = 300;
+
     // Robot Configuration Name
     protected static final String FRONT_LEFT_WHEEL = "FLW";
     protected static final String FRONT_RIGHT_WHEEL = "FRW";
@@ -40,8 +41,12 @@ public class RobotConfiguration {
 
     // Initialize Method
     public static void init(HardwareMap hardwareMap, Init... initialize) {
-        for (Init init : initialize) {
-            init.init(hardwareMap);
+        if (initialize == null) {
+            Init.ALL.init(hardwareMap);
+        } else {
+            for (Init init : initialize) {
+                init.init(hardwareMap);
+            }
         }
     }
 
@@ -105,7 +110,7 @@ public class RobotConfiguration {
             RLM = hardwareMap.get(DcMotorEx.class, REAR_LEFT_WHEEL);
             RRM = hardwareMap.get(DcMotorEx.class, REAR_RIGHT_WHEEL);
         }),
-        PHONE_CAMERA(hardwareMap -> {
+        PHONE_CAM(hardwareMap -> {
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         }),
