@@ -62,7 +62,7 @@ Aruncam PowerShot/Tower
     public static final boolean SHOULD_COLLECT_START_RINGS = true;
 
     public static void main(String[] args) {
-        MeepMeep mm = new MeepMeep(900)
+        MeepMeep mm = new MeepMeep(600)
                 .setBackground(MeepMeep.Background.FIELD_ULTIMATE_GOAL_DARK)
                 .setTheme(new ColorSchemeBlueDark())
                 .setBackgroundAlpha(1f)
