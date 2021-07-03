@@ -44,6 +44,7 @@ public class RingDetection extends LinearOpMode {
 
         while (opModeIsActive())
         {
+
             // Get data from the pipeline and output it to the telemetry. This are the variables you are going to work with.
             telemetry.addData("Ring 1:",visionPipeline.ring1); // Will return 0 if there is 1 ring, otherwise 1
             telemetry.addData("Ring 4:",visionPipeline.ring4); // Will return 0 if there is 4 rings, otherwise 1

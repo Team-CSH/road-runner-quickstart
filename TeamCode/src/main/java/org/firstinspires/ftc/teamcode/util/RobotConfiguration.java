@@ -280,7 +280,7 @@ public class RobotConfiguration {
 
         private final Supplier<OpenCvPipeline> pipeline;
 
-        private OpenCvPipeline get() {
+        public OpenCvPipeline getPipeline() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 return pipeline.get();
             }
