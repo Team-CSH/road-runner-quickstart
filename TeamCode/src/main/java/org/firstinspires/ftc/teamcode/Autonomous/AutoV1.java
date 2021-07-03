@@ -14,8 +14,7 @@ public class AutoV1 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        AutonomousBuilder builder = new AutonomousBuilder(drive)
-                .useAutoConfig();
+        AutonomousBuilder builder = new AutonomousBuilder(drive).useAutoConfig();
 
         waitForStart();
 
